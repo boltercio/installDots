@@ -55,10 +55,10 @@ logo "Installing needed packages.."
 dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev \
 			  bspwm polybar sxhkd brightnessctl dunst rofi picom xdo xdotool jgmenu \
 			  jq policykit-1-gnome git xclip \
-			  feh ueberzug maim pamixer webp libwebp-dev xdg-user-dirs \
+			  feh ueberzug maim webp libwebp-dev xdg-user-dirs \
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
-			  x11-utils x11-xserver-utils stalonetray firefox-esr \
+			  x11-utils x11-xserver-utils stalonetray \
 			  kitty lsd bat micro zsh )
 
 is_installed() {
@@ -92,13 +92,12 @@ sleep 0.5
 clear
 
 ########## ---------- Cloning the Rice! ---------- ##########
+sudo apt install -y stow
 
 logo "Downloading dotfiles"
 
-repo_url="https://github.com/gh0stzk/dotfiles"
-repo_url_deb="https://github.com/allenmagic/bspdotfiles.git"
-repo_dir="$HOME/dotfiles"
-repo_dir_deb="$HOME/dotfiles_deb"
+repo_url="https://github.com/boltercio/dotfiles"
+repo_dir="$HOME/.dotfiles"
 
 # Verifica si el directorio del repositorio ya existe y, si es así, lo elimina
 	if [ -d "$repo_dir" ]; then
@@ -109,95 +108,15 @@ repo_dir_deb="$HOME/dotfiles_deb"
 # Clona el repositorio
 printf "Cloning dotfiles from %s\n" "$repo_url"
 git clone --depth=1 "$repo_url" "$repo_dir"
-git clone --depth=1 "$repo_url_deb" "$repo_dir_deb"
-
-cp -rf $repo_dir/config/bspwm/rices $repo_dir_deb/config/bspwm
-
-rm -rf $repo_dir
-mv $repo_dir_deb $repo_dir
+cd $repo_dir
+stow -v .
 
 sleep 2
 clear
 
-########## ---------- Copy the Rice! ---------- ##########
-
-logo "Installing dotfiles.."
-printf "Copying files to respective directories..\n"
-
-[ ! -d ~/.config ] && mkdir -p ~/.config
-[ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
-[ ! -d ~/.local/share/applications ] && mkdir -p ~/.local/share/applications
-[ ! -d ~/.local/share/fonts ] && mkdir -p ~/.local/share/fonts
-
-for archivos in ~/dotfiles/config/*; do
-  cp -R "${archivos}" ~/.config/
-  if [ $? -eq 0 ]; then
-	printf "%s%s%s folder copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
-	sleep 1
-  else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
-	sleep 1
-  fi
-done
-
-for archivos in ~/dotfiles/misc/bin/*; do
-  cp -R "${archivos}" ~/.local/bin/
-  if [ $? -eq 0 ]; then
-	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
-	sleep 1
-  else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
-	sleep 1
-  fi
-done
-
-for archivos in ~/dotfiles/misc/applications/*; do
-  cp -R "${archivos}" ~/.local/share/applications/
-  if [ $? -eq 0 ]; then
-	printf "%s%s%s file copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
-	sleep 1
-  else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
-	sleep 1
-  fi
-done
-
-for archivos in ~/dotfiles/misc/fonts/*; do
-  cp -R "${archivos}" ~/.local/share/fonts/
-  if [ $? -eq 0 ]; then
-	printf "%s%s%s copied succesfully!%s\n" "${BLD}" "${CGR}" "${archivos}" "${CNC}"
-	sleep 1
-  else
-	printf "%s%s%s failed to been copied, you must copy it manually%s\n" "${BLD}" "${CRE}" "${archivos}" "${CNC}"
-	sleep 1
-  fi
-done
-
-cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
-fc-cache -rv >/dev/null 2>&1
-printf "%s%sFiles copied succesfully!!%s\n" "${BLD}" "${CGR}" "${CNC}"
-sleep 3
-
 ########## ---------- Installing tdrop,eww,xqp & stalonetray ---------- ##########
 
-logo "installing tdrop and eww"
-# Intalling tdrop for scratchpads
-	if command -v tdrop >/dev/null 2>&1; then
-		printf "\n%s%sTdrop is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
-	else
-		printf "\n%s%sInstalling tdrop, this should be fast!%s\n" "${BLD}" "${CBL}" "${CNC}"
-		{
-			cd "$HOME" || exit
-			git clone https://github.com/noctuid/tdrop.git
-			cd tdrop || exit
-			make && sudo make install
-		} && {
-			cd "$HOME" || exit
-			rm -rf {tdrop}
-		} 
-	fi
-
-
+logo "installing EWW"
 # Installing Eww
 	if command -v eww >/dev/null 2>&1; then 
 		printf "\n%s%sEww is already installed%s\n" "${BLD}" "${CGR}" "${CNC}"
