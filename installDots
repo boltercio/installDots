@@ -55,7 +55,7 @@ logo "Installing needed packages.."
 dependencias=(build-essential bspwm polybar sxhkd \
 			  alacritty kitty brightnessctl dunst rofi lsd \
 			  jq policykit-1-gnome git playerctl xclip \
-			  bat ranger picom xdo xdotool jgmenu \
+			  bat curl ranger picom xdo xdotool jgmenu \
 			  feh ueberzug maim pamixer webp libwebp-dev xdg-user-dirs \
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm x11-xserver-utils \
@@ -112,7 +112,7 @@ printf "Cloning dotfiles from %s\n" "$repo_url"
 git clone --depth=1 "$repo_url" "$repo_dir"
 git clone --depth=1 "$repo_url_deb" "$repo_dir_deb"
 
-cp -rf $repo_dir/config/bspwm/rices $repo_dir_deb/config/bspwm/rices
+cp -rf $repo_dir/config/bspwm/rices $repo_dir_deb/config/bspwm
 
 rm -rf $repo_dir
 mv $repo_dir_deb $repo_dir
