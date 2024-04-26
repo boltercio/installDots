@@ -209,7 +209,7 @@ logo "installing tdrop and eww"
 			git clone https://github.com/elkowar/eww
 			cd eww || exit
 			curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-			source ~/.zshrc
+			. "$HOME/.cargo/env"
 			cargo build --release --no-default-features --features x11
 			sudo install -m 755 "$HOME/eww/target/release/eww" -t /usr/bin/
 		} && {
