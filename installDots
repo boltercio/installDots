@@ -52,15 +52,14 @@ clear
 
 logo "Installing needed packages.."
 
-dependencias=(build-essential bspwm polybar sxhkd \
-			  alacritty kitty brightnessctl dunst rofi lsd \
-			  jq policykit-1-gnome git playerctl xclip \
-			  bat curl ranger picom xdo xdotool jgmenu \
+dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev \
+			  bspwm polybar sxhkd brightnessctl dunst rofi picom xdo xdotool jgmenu \
+			  jq policykit-1-gnome git curl xclip \
 			  feh ueberzug maim pamixer webp libwebp-dev xdg-user-dirs \
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
-			  fonts-jetbrains-mono fonts-inconsolata lightdm x11-xserver-utils \
-			  zsh x11-utils stalonetray firefox-esr \
-			  libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev )
+			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
+			  x11-utils x11-xserver-utils stalonetray firefox-esr \
+			  kitty  lsd bat micro zsh )
 
 is_installed() {
   dpkg -l "$1" &> /dev/null
@@ -71,14 +70,14 @@ printf "%s%sChecking for required packages...%s\n" "${BLD}" "${CBL}" "${CNC}"
 for paquete in "${dependencias[@]}"
 do
   if ! is_installed "$paquete"; then
-    sudo apt-get install -y "$paquete" 
+    sudo apt-get install -qq -y "$paquete" 
     printf "\n"
   else
     printf '%s%s is already installed on your system!%s\n' "${CGR}" "$paquete" "${CNC}"
-    sleep 1
+    sleep 0.5
   fi
 done
-sleep 3
+sleep 0.5
 clear
 
 
@@ -89,7 +88,7 @@ clear
 		xdg-user-dirs-update
 		echo "Creating xdg-user-dirs"
 	fi
-sleep 2 
+sleep 0.5
 clear
 
 ########## ---------- Cloning the Rice! ---------- ##########
