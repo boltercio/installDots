@@ -121,12 +121,12 @@ git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
 wget https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/plugins/sudo/sudo.plugin.zsh
 wget https://raw.githubusercontent.com/zsh-users/zsh-history-substring-search/master/zsh-history-substring-search.zsh
 
-[ ! -d /usr/share/zsh/plugins ] && mkdir -p /usr/share/zsh/plugins
-[ ! -d /usr/share/zsh/plugins/zsh-sudo ] && mkdir -p /usr/share/zsh/plugins/zsh-sudo
-[ ! -d /usr/share/zsh/plugins/zsh-history-substring-search ] && mkdir -p /usr/share/zsh/plugins/zsh-history-substring-search
-mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
-mv sudo-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
-mv zsh* /usr/share/zsh/plugins/
+[ ! -d /usr/share/zsh/plugins ] && sudo mkdir -p /usr/share/zsh/plugins
+[ ! -d /usr/share/zsh/plugins/zsh-sudo ] && sudo mkdir -p /usr/share/zsh/plugins/zsh-sudo
+[ ! -d /usr/share/zsh/plugins/zsh-history-substring-search ] && sudo mkdir -p /usr/share/zsh/plugins/zsh-history-substring-search
+sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
+sudo mv sudo-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
+sudo mv zsh* /usr/share/zsh/plugins/
 
 ########## ---------- Installing tdrop,eww,xqp & stalonetray ---------- ##########
 
