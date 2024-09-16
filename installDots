@@ -25,7 +25,7 @@ function ctrl_c(){
     tput cnorm
     exit 0
 }
- 
+
 function logo () {
 # Letra "Calvin S" de https://www.freetool.dev/es/generador-de-letras-ascii
 clear
@@ -85,12 +85,17 @@ is_installed() {
     dpkg -l "$1" &> /dev/null
     return $?
 }
+
 echo -e "${blue}[*] ${gray}Comprobando paquetes requeridos...\n${end}"
 for paquete in "${dependencias[@]}"
 do
 if ! is_installed "$paquete"; then
-    sudo apt-get install -qq -y "$paquete" 
-    echo -e "\n"
+    sudo apt-get install -qq -y "$paquete" 1>/dev/null 2>>RiceError.log
+    if [ "$(echo $?)" != 0 ]; then
+        echo -e "${red}[!] ${gray}Ha fallado la instalacion de $paquete${end}"
+    else
+        echo -e "${blue}[*] ${gray}$paquete se ha instalado correctamente.${end}"
+    fi
 else
     echo -e "${green}[+] ${gray}$paquete ya esta instalado en tu sistema.${end}"
     sleep 0.5
@@ -236,7 +241,7 @@ if cp -R ~/dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
     echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
     sleep 1
 else
-    echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log"
+    echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log${end}"
     sleep 1
 fi
 
@@ -283,7 +288,7 @@ else
 		cd "$HOME" || exit
 	    rm -rf {.cargo,.rustup,eww}
     } || {
-        echo -e "${red}[!] ${gray}Fallo al installar Eww. tendras que instalarlo manualmente.\n"
+        echo -e "${red}[!] ${gray}Fallo al installar Eww. tendras que instalarlo manualmente.\n${end}"
         sleep 2 
     }
 fi
@@ -299,6 +304,6 @@ if [[ $SHELL != "/usr/bin/zsh" ]]; then
 	chsh -s /usr/bin/zsh
 	echo -e "${green}[+] ${gray}Shell cambiada a zsh. Por favor reinicia el sistema.${end}"
 else
-	echo -e "${green}[+] ${gray}Zsh ya es tu shell por defecto."
+	echo -e "${green}[+] ${gray}Zsh ya es tu shell por defecto.${end}"
 fi
 zsh
