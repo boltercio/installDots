@@ -62,7 +62,7 @@ while true; do
 		case $yn in
 			[Yy]* ) break;;
 			[Nn]* ) exit;;
-			* ) printf " Error: just write 'y' or 'n'\n\n";;
+			* ) echo -e " Error: solo elige 'y' o 'n'";;
 		esac
     done
 clear
@@ -206,7 +206,7 @@ echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end
 [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
 [ ! -d ~/.local/share ] && mkdir -p ~/.local/share
 
-for dirs in ~/dotfiles/config/*; do
+for dirs in ~/.dotfiles/config/*; do
     dir_name=$(basename "$dirs")
 # If the directory is nvim and the user doesn't want to try it, skip this loop
     if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
@@ -222,7 +222,7 @@ for dirs in ~/dotfiles/config/*; do
 done
 
 for folder in applications asciiart fonts; do
-    if cp -R ~/dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
+    if cp -R ~/.dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
         echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
         sleep 1
     else
@@ -231,7 +231,7 @@ for folder in applications asciiart fonts; do
     fi
 done
 
-if cp -R ~/dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
+if cp -R ~/.dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
     echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
     sleep 1
 else
@@ -239,7 +239,7 @@ else
     sleep 1
 fi
 
-cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
+cp -f "$HOME"/.dotfiles/home/.zshrc "$HOME"
 fc-cache -rv >/dev/null 2>&1
 
 echo -e "Archivos copiados correctamente!!"
