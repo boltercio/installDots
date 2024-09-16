@@ -26,15 +26,16 @@ function ctrl_c(){
     exit 0
 }
 
-function logo () {
+function logo (mensaje) {
 # Letra "Calvin S" de https://www.freetool.dev/es/generador-de-letras-ascii
 clear
 echo -e "
-╔╗ ┌─┐┬ ┌┬┐┌─┐┬─┐╔═╗┌─┐┬─┐┬┌─┐┌┬┐┌─┐
-╠╩╗│ ││  │ ├┤ ├┬┘╚═╗│  ├┬┘│├─┘ │ └─┐
-╚═╝└─┘┴─┘┴ └─┘┴└─╚═╝└─┘┴└─┴┴   ┴ └─┘
+${gray}╔╗ ┌─┐┬ ┌┬┐┌─┐┬─┐╔═╗┌─┐┬─┐┬┌─┐┌┬┐┌─┐
+${gray}╠╩╗│ ││  │ ├┤ ├┬┘╚═╗│  ├┬┘│├─┘ │ └─┐
+${gray}╚═╝└─┘┴─┘┴ └─┘┴└─╚═╝└─┘┴└─┴┴   ┴ └─┘
                         ${turquoise}By Boltercio${end}
-"
+
+${gray}$Mensaje${end}"
 }
 
 backup_folder=~/.RiceBackup
@@ -49,8 +50,7 @@ fi
 
 ########## ---------- Welcome ---------- ##########
 
-logo 
-echo -e "${gray}Bienvenido!!${end}"
+logo "Bienvenido!!"
 echo -e "${red}Este script comprobara si tienes instaladas las dependencias necesarias
 si no lo estan las instalara. despues clonara el repositorio con los temas en tu directorio HOME. 
 Despues de esto hara un backup de tus archivos de configuracion y copiara los de los nuevos temas.
@@ -69,8 +69,7 @@ clear
 
 ########## ---------- Instalando paquetes ---------- ##########
 
-logo 
-echo -e "${gray}Instalando paquetes necesarios...${end}"
+logo "Instalando paquetes necesarios..."
 
 dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev \
 			  bspwm polybar sxhkd brightnessctl dunst rofi picom xdo xdotool jgmenu \
@@ -116,8 +115,7 @@ sleep 0.5
 clear
 
 ########## ---------- Clonando temas ---------- ##########
-logo 
-echo -e "Descargando dotfiles"
+logo "Descargando dotfiles"
 
 repo_url="https://github.com/boltercio/dotfiles"
 repo_dir="$HOME/.dotfiles"
@@ -139,8 +137,7 @@ clear
 
 ########## ---------- Backup files ---------- ##########
 
-logo 
-echo -e "Realizando backup de configuraciones"
+logo "Realizando backup de configuraciones"
 
 echo -e "${gray}Si tienes una poderosa y super pro configuracion de NEOVIM, responde 'n' a la siguiente pregunta. si respondes 'y' tu configuracion se movera al directorio de backup.${end}"
 
@@ -204,8 +201,7 @@ sleep 5
 
 ########## ---------- Copy the Rice! ---------- ##########
 
-logo 
-echo -e "Instalando dotfiles.."
+logo "Instalando dotfiles.."
 echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end}"
 
 [ ! -d ~/.config ] && mkdir -p ~/.config
@@ -253,6 +249,7 @@ sleep 5
 
 
 ########## ---------- Instalando plugins para zsh ---------- ##########
+logo "Instalando complementos zsh"
 
 git clone https://github.com/zsh-users/zsh-autosuggestions.git
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -268,8 +265,7 @@ sudo mv zsh* /usr/share/zsh/plugins/
 
 ########## ---------- Instalando EWW ---------- ##########
 
-logo 
-echo -e "instalando EWW"
+logo "instalando EWW"
 # Installing Eww
 if command -v eww >/dev/null 2>&1; then 
 	echo -e "${green}[+] ${gray}Eww is already installed\n${end}"
@@ -295,8 +291,7 @@ fi
 
 ########## --------- Cambiando shell a zsh ---------- ##########
 
-logo 
-echo -e "Cambiando shell predeterminada a zsh"
+logo "Cambiando shell predeterminada a zsh"
 
 if [[ $SHELL != "/usr/bin/zsh" ]]; then
 	echo -e "${green}[+] ${gray}Cambiando tu shell a zsh. se necesita acceso root${end}"
