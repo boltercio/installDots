@@ -78,7 +78,7 @@ dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
 			  x11-utils x11-xserver-utils stalonetray \
-			  kitty lsd wget bat neovim zsh )
+			  kitty lsd wget bat neovim )
 
 is_installed() {
     dpkg -l "$1" &> /dev/null
@@ -116,7 +116,7 @@ clear
 logo "Descargando dotfiles"
 
 repo_url="https://github.com/boltercio/dotfiles"
-repo_dir="$HOME/.dotfiles"
+repo_dir="$HOME/dotfiles"
 
 # Verifica si el directorio del repositorio ya existe y, si es así, lo elimina
 if [ -d "$repo_dir" ]; then
@@ -185,7 +185,7 @@ if [[ $try_nvim == "y" ]]; then
 fi
 
 if [ -f ~/.zshrc ]; then
-    if mv ~/.zshrc "$backup_folder"/.zshrc_"$date" 2>> RiceError.log; then
+    if mv ~/.zshrc ${backup_folder}/.zshrc_${date} 2>> RiceError.log; then
         echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/zshrc_$date${end}"
     else
         echo -e "${red}[!] ${gray}Fallo al guardar el archivo zshrc. puedes verlo en RiceError.log${end}"
@@ -222,7 +222,7 @@ for dirs in ~/.dotfiles/config/*; do
 done
 
 for folder in applications asciiart fonts; do
-    if cp -R ~/.dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
+    if cp -R ~/dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
         echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
         sleep 1
     else
@@ -231,7 +231,7 @@ for folder in applications asciiart fonts; do
     fi
 done
 
-if cp -R ~/.dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
+if cp -R ~/dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
     echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
     sleep 1
 else
@@ -239,7 +239,7 @@ else
     sleep 1
 fi
 
-cp -f "$HOME"/.dotfiles/home/.zshrc "$HOME"
+cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
 fc-cache -rv >/dev/null 2>&1
 
 echo -e "Archivos copiados correctamente!!"
