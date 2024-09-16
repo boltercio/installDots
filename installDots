@@ -21,7 +21,7 @@ end="\033[0m\e[0m"                # Final de color
 trap ctrl_c INT
 
 function ctrl_c(){
-    echo -e "${Red}[!]${gray} Exiting...${end}\n"
+    echo -e "${Red}[!]${gray} Saliendo...${end}\n"
     tput cnorm
     exit 0
 }
@@ -36,25 +36,6 @@ echo -e "
                         ${turquoise}By Boltercio${end}
 "
 }
- 
-function CheckUser() {
-if [ $UID != 0 ]; then
-    echo -e "${red}[!]${gray} This script must be run with root permissions${end}"
-    while true; do
-        echo -e "${yellow}[*]${gray} You want execute this script with sudo command? ${turquoise}[Y/n]${end}"
-        read response
-        case $response in
-            [yY]* ) echo -e "${green}[+]${gray} Launching script with sudo permissions.${end}"
-            sudo ./$0
-            break;;
-            [nN]* ) echo -e "${red}[!]${gray} Script canceled by user.${end}"
-            break;;
-            *) echo -e "${red}[!]${gray} invalid input.${end}";;
-        esac
-    done
-    exit 0
-fi
-} 
 
 backup_folder=~/.RiceBackup
 date=$(date +%Y%m%d-%H%M%S)
@@ -86,7 +67,7 @@ while true; do
     done
 clear
 
-########## ---------- Install packages ---------- ##########
+########## ---------- Instalando paquetes ---------- ##########
 
 logo 
 echo -e "${gray}Instalando paquetes necesarios...${end}"
@@ -98,7 +79,7 @@ dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
 			  x11-utils x11-xserver-utils stalonetray \
-			  kitty lsd bat micro zsh )
+			  kitty lsd bat neovim zsh )
 
 is_installed() {
     dpkg -l "$1" &> /dev/null
@@ -119,7 +100,7 @@ sleep 0.5
 clear
 
 
-########## ---------- Preparing Folders ---------- ##########
+########## ---------- Preparando directorios ---------- ##########
 
 # Verifica si el archivo user-dirs.dirs no existe en ~/.config
 if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
@@ -129,7 +110,7 @@ fi
 sleep 0.5
 clear
 
-########## ---------- Cloning the Rice! ---------- ##########
+########## ---------- Clonando temas ---------- ##########
 logo 
 echo -e "Descargando dotfiles"
 
@@ -146,12 +127,127 @@ fi
 echo -e "Clonando archivos desde $repo_url\n"
 git clone --depth=1 "$repo_url" "$repo_dir"
 cd $repo_dir
-stow -v .
 
 sleep 2
 clear
 
-########## ---------- Installing plugins for zsh ---------- ##########
+
+########## ---------- Backup files ---------- ##########
+
+logo 
+echo -e "Realizando backup de configuraciones"
+
+echo -e "${gray}Si tienes una poderosa y super pro configuracion de NEOVIM, responde 'n' a la siguiente pregunta. si respondes 'y' tu configuracion se movera al directorio de backup.${end}"
+
+while true; do
+    read -rp "Quieres probar la configuracion de neovim de gh0stzk? (y/n): " try_nvim
+    if [[ "$try_nvim" == "y" || "$try_nvim" == "n" ]]; then
+        break
+    else
+        echo "Respuesta invalida. selecciona 'y' o 'n'."
+    fi
+done
+
+echo -e "Backup files will be stored in $HOME/.RiceBackup"
+sleep 10
+
+[ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
+
+for folder in bspwm alacritty picom rofi eww sxhkd dunst kitty polybar ncmpcpp ranger tmux zsh; do
+    if [ -d "$HOME/.config/$folder" ]; then
+        if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> RiceError.log; then
+            echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/${folder}_$date${end}"
+            sleep 1
+        else
+            echo -e  "${red}[!] ${gray}Fallo al guardar el directorio $folder. Puedes verlo en RiceError.log${end}"
+            sleep 1
+        fi
+    else
+        echo -e "${yellow}[*] ${gray}El directorio $folder no existe, no necesita backup${end}"
+        sleep 1
+    fi
+done
+
+if [[ $try_nvim == "y" ]]; then
+        # Backup nvim
+    if [ -d "$HOME/.config/nvim" ]; then
+        if mv "$HOME/.config/nvim" "$backup_folder/nvim_$date" 2>> RiceError.log; then
+            echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/nvim_$date${end}"
+            sleep 1
+        else
+            echo -e "${red}[!] ${gray}Fallo al guardar el directorio nvim. puedes verlo en RiceError.log${end}"    
+            sleep 1
+        fi
+    else
+        echo -e "${yellow}[*] ${gray}El directorio nvim no existe, no necesita backup${end}"
+        sleep 1
+    fi
+fi
+
+if [ -f ~/.zshrc ]; then
+    if mv ~/.zshrc "$backup_folder"/.zshrc_"$date" 2>> RiceError.log; then
+        echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/zshrc_$date${end}"
+    else
+        echo -e "${red}[!] ${gray}Fallo al guardar el archivo zshrc. puedes verlo en RiceError.log${end}"
+    fi
+else
+    echo -e "${yellow}[*] ${gray}El archivo .zshrc no existe, no necesita backup${end}"
+fi
+
+echo -e "${green}[+] ${gray}Backup completado.${end}"
+sleep 5
+
+########## ---------- Copy the Rice! ---------- ##########
+
+logo 
+echo -e "Instalando dotfiles.."
+echo -e "${green}[+]Copiando archivos a sus respectivos directorios${end}"
+
+[ ! -d ~/.config ] && mkdir -p ~/.config
+[ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
+[ ! -d ~/.local/share ] && mkdir -p ~/.local/share
+
+for dirs in ~/dotfiles/config/*; do
+    dir_name=$(basename "$dirs")
+# If the directory is nvim and the user doesn't want to try it, skip this loop
+    if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
+        continue
+    fi
+    if cp -R "${dirs}" ~/.config/ 2>> RiceError.log; then
+		echo -e "${green}[+] ${gray}Configuracion $dir_name instalada.${end}"
+        sleep 1
+    else
+        echo -e "${red}[!] ${gray}La instalacion de la configuracion $dir_name ha fallado, puedes verlo en RiceError.log${end}"
+        sleep 1
+    fi
+done
+
+for folder in applications asciiart fonts; do
+    if cp -R ~/dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
+        echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
+        sleep 1
+    else
+        echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log${end}"
+        sleep 1
+    fi
+done
+
+if cp -R ~/dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
+    echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
+    sleep 1
+else
+    echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log"
+    sleep 1
+fi
+
+cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
+fc-cache -rv >/dev/null 2>&1
+
+echo -e "Archivos copiados correctamente!!"
+sleep 5
+
+
+########## ---------- Instalando plugins para zsh ---------- ##########
 
 git clone https://github.com/zsh-users/zsh-autosuggestions.git
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
@@ -165,7 +261,7 @@ sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
 sudo mv sudo-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
 sudo mv zsh* /usr/share/zsh/plugins/
 
-########## ---------- Installing tdrop,eww,xqp & stalonetray ---------- ##########
+########## ---------- Instalando EWW ---------- ##########
 
 logo 
 echo -e "instalando EWW"
@@ -192,7 +288,7 @@ else
     }
 fi
 
-########## --------- Changing shell to zsh ---------- ##########
+########## --------- Cambiando shell a zsh ---------- ##########
 
 logo 
 echo -e "Cambiando shell predeterminada a zsh"
