@@ -85,20 +85,18 @@ is_installed() {
     return $?
 }
 
-echo -e "${blue}[*] ${gray}Comprobando paquetes requeridos...\n${end}"
-for paquete in "${dependencias[@]}"
-do
-if ! is_installed "$paquete"; then
-    sudo apt-get install -qq -y "$paquete" 1>/dev/null 2>>RiceError.log
-    if [ "$(echo $?)" != 0 ]; then
-        echo -e "${red}[!] ${gray}Ha fallado la instalacion de $paquete${end}"
+for paquete in "${dependencias[@]}"; do
+    if ! is_installed "$paquete"; then
+        sudo apt-get install -qq -y "$paquete" 1>/dev/null 2>>RiceError.log
+        if [ "$(echo $?)" != 0 ]; then
+            echo -e "${red}[!] ${gray}Ha fallado la instalacion de $paquete${end}"
+        else
+            echo -e "${blue}[*] ${gray}$paquete se ha instalado correctamente.${end}"
+        fi
     else
-        echo -e "${blue}[*] ${gray}$paquete se ha instalado correctamente.${end}"
+        echo -e "${green}[+] ${gray}$paquete ya esta instalado en tu sistema.${end}"
+        sleep 0.5
     fi
-else
-    echo -e "${green}[+] ${gray}$paquete ya esta instalado en tu sistema.${end}"
-    sleep 0.5
-fi
 done
 sleep 0.5
 clear
