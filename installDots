@@ -4,9 +4,10 @@
 #  ╩╚═╩╚═╝╚═╝  ╩╝╚╝╚═╝ ╩ ╩ ╩╩═╝╩═╝╚═╝╩╚═
 #	Script to install bspwm and other tool config dotfiles
 # Author: z0mbi3
-# Modifier: allenmagic
+# Modifier: boltercio
 #	raw_url: https://github.com/gh0stzk
-# modifi_url: https://github.com/allenmagic
+# modifi_url: https://github.com/boltercio
+#
 ### ---------- Basicos scripts ---------- ### 
  
 green="\e[0;32m\033[1m"           # Correct message
@@ -115,12 +116,12 @@ clear
 ########## ---------- Clonando temas ---------- ##########
 logo "Descargando dotfiles"
 
-repo_url="https://github.com/boltercio/dotfiles"
+repo_url="https://github.com/gh0stzk/dotfiles"
 repo_dir="$HOME/dotfiles"
 
 # Verifica si el directorio del repositorio ya existe y, si es así, lo elimina
 if [ -d "$repo_dir" ]; then
-	echo -e "${red}[!} ${gray}Removing existing dotfiles repository\n${end}"
+	echo -e "${red}[!} ${gray}Eliminando repositorio antiguo.${end}"
 	rm -rf "$repo_dir"
 fi
 
@@ -206,7 +207,7 @@ echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end
 [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
 [ ! -d ~/.local/share ] && mkdir -p ~/.local/share
 
-for dirs in ~/.dotfiles/config/*; do
+for dirs in ~/dotfiles/config/*; do
     dir_name=$(basename "$dirs")
 # If the directory is nvim and the user doesn't want to try it, skip this loop
     if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
@@ -248,6 +249,13 @@ sleep 5
 
 ########## ---------- Instalando plugins para zsh ---------- ##########
 logo "Instalando complementos zsh"
+
+sudo apt-get install -qq -y zsh 1>/dev/null 2>>RiceError.log
+if [ "$(echo $?)" != 0 ]; then
+    echo -e "${red}[!] ${gray}Ha fallado la instalacion de zsh${end}"
+else
+    echo -e "${blue}[*] ${gray}Zsh se ha instalado correctamente.${end}"
+fi
 
 git clone https://github.com/zsh-users/zsh-autosuggestions.git
 git clone https://github.com/zsh-users/zsh-syntax-highlighting.git
