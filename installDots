@@ -79,7 +79,7 @@ dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
 			  x11-utils x11-xserver-utils stalonetray \
-			  kitty lsd bat neovim zsh )
+			  kitty lsd wget bat neovim zsh )
 
 is_installed() {
     dpkg -l "$1" &> /dev/null
@@ -206,7 +206,7 @@ sleep 5
 
 logo 
 echo -e "Instalando dotfiles.."
-echo -e "${green}[+]Copiando archivos a sus respectivos directorios${end}"
+echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end}"
 
 [ ! -d ~/.config ] && mkdir -p ~/.config
 [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
