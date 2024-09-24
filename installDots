@@ -6,7 +6,7 @@
 # Author: z0mbi3
 # Modifier: boltercio
 #	raw_url: https://github.com/gh0stzk
-# modifi_url: https://github.com/boltercio
+# modify_url: https://github.com/boltercio
 #
 ### ---------- Basicos scripts ---------- ### 
  
@@ -36,7 +36,7 @@ ${gray}╠╩╗│ ││  │ ├┤ ├┬┘╚═╗│  ├┬┘│├─
 ${gray}╚═╝└─┘┴─┘┴ └─┘┴└─╚═╝└─┘┴└─┴┴   ┴ └─┘
                         ${turquoise}By Boltercio${end}
 
-${gray}$Mensaje${end}"
+"
 }
 
 backup_folder=~/.RiceBackup
@@ -45,13 +45,14 @@ date=$(date +%Y%m%d-%H%M%S)
 ########## ---------- You must not run this as root ---------- ##########
 
 if [ "$(id -u)" = 0 ]; then
-    echo "Este script NO DEBE ejecutarse como root."
+    echo -e "${red}Este script NO DEBE ejecutarse como root.${end}"
     exit 1
 fi
 
 ########## ---------- Welcome ---------- ##########
 
-logo "Bienvenido!!"
+logo 
+echo -e "${gray}Bienvenido!!${end}"
 echo -e "${red}Este script comprobara si tienes instaladas las dependencias necesarias
 si no lo estan las instalara. despues clonara el repositorio con los temas en tu directorio HOME. 
 Despues de esto hara un backup de tus archivos de configuracion y copiara los de los nuevos temas.
@@ -70,7 +71,8 @@ clear
 
 ########## ---------- Instalando paquetes ---------- ##########
 
-logo "Instalando paquetes necesarios..."
+logo 
+echo -e "${gray}Instalando paquetes necesarios...${end}"
 
 dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3-dev \
 			  bspwm polybar sxhkd brightnessctl dunst rofi picom xdo xdotool jgmenu \
@@ -79,7 +81,8 @@ dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
 			  x11-utils x11-xserver-utils stalonetray \
-			  kitty lsd wget bat neovim )
+			  alacritty kitty lsd wget bat neovim npm \
+          )
 
 is_installed() {
     dpkg -l "$1" &> /dev/null
@@ -114,10 +117,11 @@ sleep 0.5
 clear
 
 ########## ---------- Clonando temas ---------- ##########
-logo "Descargando dotfiles"
+logo 
+echo -e "${gray}Descargando dotfiles.${end}"
 
-repo_url="https://github.com/gh0stzk/dotfiles"
-repo_dir="$HOME/dotfiles"
+repo_url="https://github.com/boltercio/installDots"
+repo_dir="$HOME/installDots"
 
 # Verifica si el directorio del repositorio ya existe y, si es así, lo elimina
 if [ -d "$repo_dir" ]; then
@@ -136,9 +140,11 @@ clear
 
 ########## ---------- Backup files ---------- ##########
 
-logo "Realizando backup de configuraciones"
+logo 
+echo -e "${gray}Realizando backup de configuraciones${end}"
 
-echo -e "${gray}Si tienes una poderosa y super pro configuracion de NEOVIM, responde 'n' a la siguiente pregunta. si respondes 'y' tu configuracion se movera al directorio de backup.${end}"
+echo -e "${gray}Si tienes una configuracion poderosa y super pro de NEOVIM, responde 'n' a la siguiente pregunta.
+si respondes 'y' tu configuracion se movera al directorio de backup.${end}"
 
 while true; do
     read -rp "Quieres probar la configuracion de neovim de gh0stzk? (y/n): " try_nvim
@@ -154,7 +160,7 @@ sleep 10
 
 [ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
 
-for folder in bspwm alacritty picom rofi eww sxhkd dunst kitty polybar ncmpcpp ranger tmux zsh; do
+for folder in bspwm alacritty picom rofi eww sxhkd dunst kitty polybar tmux zsh; do
     if [ -d "$HOME/.config/$folder" ]; then
         if mv "$HOME/.config/$folder" "$backup_folder/${folder}_$date" 2>> RiceError.log; then
             echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/${folder}_$date${end}"
@@ -170,7 +176,6 @@ for folder in bspwm alacritty picom rofi eww sxhkd dunst kitty polybar ncmpcpp r
 done
 
 if [[ $try_nvim == "y" ]]; then
-        # Backup nvim
     if [ -d "$HOME/.config/nvim" ]; then
         if mv "$HOME/.config/nvim" "$backup_folder/nvim_$date" 2>> RiceError.log; then
             echo -e "${green}[+] ${gray}Directorio salvado correctamente en $backup_folder/nvim_$date${end}"
@@ -200,14 +205,15 @@ sleep 5
 
 ########## ---------- Copy the Rice! ---------- ##########
 
-logo "Instalando dotfiles.."
+logo 
+echo -e "${gray}Instalando dotfiles..${end}"
 echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end}"
 
 [ ! -d ~/.config ] && mkdir -p ~/.config
 [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
 [ ! -d ~/.local/share ] && mkdir -p ~/.local/share
 
-for dirs in ~/dotfiles/config/*; do
+for dirs in ~/installDots/config/*; do
     dir_name=$(basename "$dirs")
 # If the directory is nvim and the user doesn't want to try it, skip this loop
     if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
@@ -223,7 +229,7 @@ for dirs in ~/dotfiles/config/*; do
 done
 
 for folder in applications asciiart fonts; do
-    if cp -R ~/dotfiles/misc/$folder ~/.local/share/ 2>> RiceError.log; then
+    if cp -R ~/installDots/misc/$folder ~/.local/share/ 2>> RiceError.log; then
         echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
         sleep 1
     else
@@ -232,7 +238,7 @@ for folder in applications asciiart fonts; do
     fi
 done
 
-if cp -R ~/dotfiles/misc/bin ~/.local/ 2>> RiceError.log; then
+if cp -R ~/installDots/misc/bin ~/.local/ 2>> RiceError.log; then
     echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
     sleep 1
 else
@@ -240,15 +246,16 @@ else
     sleep 1
 fi
 
-cp -f "$HOME"/dotfiles/home/.zshrc "$HOME"
+cp -f "$HOME"/installDots/home/.zshrc "$HOME"
 fc-cache -rv >/dev/null 2>&1
 
-echo -e "Archivos copiados correctamente!!"
+echo -e "Copia de archivos terminada!!"
 sleep 5
 
 
 ########## ---------- Instalando plugins para zsh ---------- ##########
-logo "Instalando complementos zsh"
+logo 
+echo -e "${gray}Instalando complementos zsh${end}"
 
 sudo apt-get install -qq -y zsh 1>/dev/null 2>>RiceError.log
 if [ "$(echo $?)" != 0 ]; then
@@ -266,13 +273,13 @@ wget https://raw.githubusercontent.com/zsh-users/zsh-history-substring-search/ma
 [ ! -d /usr/share/zsh/plugins/zsh-sudo ] && sudo mkdir -p /usr/share/zsh/plugins/zsh-sudo
 [ ! -d /usr/share/zsh/plugins/zsh-history-substring-search ] && sudo mkdir -p /usr/share/zsh/plugins/zsh-history-substring-search
 sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
-sudo mv sudo-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
+sudo mv zsh-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
 sudo mv zsh* /usr/share/zsh/plugins/
 
 ########## ---------- Instalando EWW ---------- ##########
 
-logo "instalando EWW"
-# Installing Eww
+logo 
+echo -e "${gray}Instalando EWW${end}"
 if command -v eww >/dev/null 2>&1; then 
 	echo -e "${green}[+] ${gray}Eww is already installed\n${end}"
 else
@@ -297,7 +304,8 @@ fi
 
 ########## --------- Cambiando shell a zsh ---------- ##########
 
-logo "Cambiando shell predeterminada a zsh"
+logo 
+echo -e "${gray}Cambiando shell predeterminada a zsh${end}"
 
 if [[ $SHELL != "/usr/bin/zsh" ]]; then
 	echo -e "${green}[+] ${gray}Cambiando tu shell a zsh. se necesita acceso root${end}"
