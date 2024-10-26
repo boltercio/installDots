@@ -12,7 +12,7 @@ export VISUAL="${EDITOR}"
 export EDITOR='geany'
 export BROWSER='firefox'
 export HISTORY_IGNORE="(ls|cd|pwd|exit|sudo reboot|history|cd -|cd ..)"
-export SUDO_PROMPT="Concediendo acceso root para %u. Password por favro: "
+export SUDO_PROMPT="Concediendo acceso root para %u. Password por favor: "
 export BAT_THEME="base16"
 
 if [ -d "$HOME/.local/bin" ] ;
@@ -136,7 +136,7 @@ fi
 
 alias nv="nvim"
 
-alias cat="bat --theme=base16"
+alias cat="batcat --theme=base16"
 alias ls='lsd --group-dirs=first -a'
 alias ll='lsd --group-dirs=first -la'
 alias dir='lsd --group-dirs=first -l'

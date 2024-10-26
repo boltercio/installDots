@@ -1,6 +1,0 @@
-[INFO  Tue Sep 24 16:19:23 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:184: Executing installer for Package(name=bash-language-server) {}
-[INFO  Tue Sep 24 16:19:23 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:184: Executing installer for Package(name=lua-language-server) {}
-[INFO  Tue Sep 24 16:19:23 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:184: Executing installer for Package(name=css-lsp) {}
-[INFO  Tue Sep 24 16:19:24 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:245: Installation succeeded for Package(name=lua-language-server)
-[INFO  Tue Sep 24 16:19:28 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:245: Installation succeeded for Package(name=bash-language-server)
-[INFO  Tue Sep 24 16:19:29 2024] ...e/nvim/lazy/mason.nvim/lua/mason-core/installer/init.lua:245: Installation succeeded for Package(name=css-lsp)

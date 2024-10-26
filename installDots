@@ -61,15 +61,15 @@ Este script no tiene potencial para romper tu sistema, solo realiza modificacion
 
 while true; do
 	read -rp " Quieres continuar? [y/N]: " yn
-		case $yn in
-			[Yy]* ) break;;
-			[Nn]* ) exit;;
-			* ) echo -e " Error: solo elige 'y' o 'n'";;
-		esac
-    done
-clear
+	case $yn in
+		[Yy]* ) break;;
+		[Nn]* ) exit;;
+		* ) echo -e " Error: solo elige 'y' o 'n'";;
+    esac
+done
 
-########## ---------- Instalando paquetes ---------- ##########
+
+######### ---------- Instalando paquetes ---------- ##########
 
 logo 
 echo -e "${gray}Instalando paquetes necesarios...${end}"
@@ -102,9 +102,7 @@ for paquete in "${dependencias[@]}"; do
         sleep 0.5
     fi
 done
-sleep 0.5
-clear
-
+sleep 2
 
 ########## ---------- Preparando directorios ---------- ##########
 
@@ -113,8 +111,7 @@ if [ ! -e "$HOME/.config/user-dirs.dirs" ]; then
 	xdg-user-dirs-update
 	echo "${gren}[+} ${gray}Creando directorios de usuario${end}"
 fi
-sleep 0.5
-clear
+sleep 2
 
 ########## ---------- Clonando temas ---------- ##########
 logo 
@@ -135,8 +132,6 @@ git clone --depth=1 "$repo_url" "$repo_dir"
 cd $repo_dir
 
 sleep 2
-clear
-
 
 ########## ---------- Backup files ---------- ##########
 
@@ -156,7 +151,7 @@ while true; do
 done
 
 echo -e "Backup files will be stored in $HOME/.RiceBackup"
-sleep 10
+sleep 5
 
 [ ! -d "$backup_folder" ] && mkdir -p "$backup_folder"
 
@@ -213,7 +208,7 @@ echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end
 [ ! -d ~/.local/bin ] && mkdir -p ~/.local/bin
 [ ! -d ~/.local/share ] && mkdir -p ~/.local/share
 
-for dirs in ~/installDots/config/*; do
+for dirs in $repo_dir/config/*; do
     dir_name=$(basename "$dirs")
 # If the directory is nvim and the user doesn't want to try it, skip this loop
     if [[ $dir_name == "nvim" && $try_nvim != "y" ]]; then
@@ -228,25 +223,15 @@ for dirs in ~/installDots/config/*; do
     fi
 done
 
-for folder in applications asciiart fonts; do
-    if cp -R ~/installDots/misc/$folder ~/.local/share/ 2>> RiceError.log; then
-        echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
-        sleep 1
-    else
-        echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log${end}"
-        sleep 1
-    fi
-done
-
-if cp -R ~/installDots/misc/bin ~/.local/ 2>> RiceError.log; then
-    echo -e "${green}[+] ${gray}Directorio $folder copiado correctamente${end}"
+if cp -R $repo_dir/local/share/fonts ~/.local/share/ 2>> RiceError.log; then
+    echo -e "${green}[+] ${gray}Fuentes copiadas correctamente${end}"
     sleep 1
 else
-    echo -e "${red}[!] ${gray}Fallo al copiar el directorio $folder, puedes verlo en RiceError.log${end}"
+    echo -e "${red}[!] ${gray}Fallo al copiar las fuentes, puedes verlo en RiceError.log${end}"
     sleep 1
 fi
 
-cp -f "$HOME"/installDots/home/.zshrc "$HOME"
+cp -f $repo_dir/home/.zshrc "$HOME"
 fc-cache -rv >/dev/null 2>&1
 
 echo -e "Copia de archivos terminada!!"
@@ -275,6 +260,7 @@ wget https://raw.githubusercontent.com/zsh-users/zsh-history-substring-search/ma
 sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
 sudo mv zsh-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
 sudo mv zsh* /usr/share/zsh/plugins/
+sleep 5
 
 ########## ---------- Instalando EWW ---------- ##########
 
@@ -298,9 +284,10 @@ else
 	    rm -rf {.cargo,.rustup,eww}
     } || {
         echo -e "${red}[!] ${gray}Fallo al installar Eww. tendras que instalarlo manualmente.\n${end}"
-        sleep 2 
+        sleep 0.5
     }
 fi
+sleep 5
 
 ########## --------- Cambiando shell a zsh ---------- ##########
 
@@ -315,4 +302,5 @@ if [[ $SHELL != "/usr/bin/zsh" ]]; then
 else
 	echo -e "${green}[+] ${gray}Zsh ya es tu shell por defecto.${end}"
 fi
+sleep 2
 zsh
