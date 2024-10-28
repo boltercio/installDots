@@ -202,20 +202,6 @@ sleep 5
 
 logo 
 
-echo -e "${gray}Podemos intastalar todas las fuentes del repositorio 'NERD-FONTS' para
-que puedas ver correctamente todos los iconos en la terminal y los paneles, pero es una instalacion
-pesada, requiere unos 20Gb de espacio y tardara bastante tiempo dependiendo de tu equipo y conexion.
-Si respondes 'n' se instalaran las fuentes esctictamente necesarias.${end}"
-
-while true; do
-    read -rp "Quieres probar la configuracion de neovim de gh0stzk? (y/n): " nerd_fonts
-    if [[ "$nerd_fonts" == "y" || "$nerd_fonts" == "n" ]]; then
-        break
-    else
-        echo "Respuesta invalida. selecciona 'y' o 'n'."
-    fi
-done
-
 echo -e "${gray}Instalando dotfiles..${end}"
 echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end}"
 
@@ -238,23 +224,13 @@ for dirs in $repo_dir/config/*; do
     fi
 done
 
-if [[ $nerd_fonts == "y" ]]; then
-    echo -e "${gray}Instalando fuentes Nerd Fonts${end}"
 
-    git clone https://github.com/ryanoasis/nerd-fonts.git
-    cd nerd-fonts
-    ./install.sh >/dev/null
-    cd .. && rm -rf nerd-fonts
-    echo -e "Fuentes instaladas"
-    sleep 5
+if cp -R local/share/fonts ~/.local/share/ 2>> RiceError.log; then
+    echo -e "${green}[+] ${gray}Fuentes instalada.${end}"
+    sleep 1
 else
-    if cp -R local/share/fonts ~/.local/share/ 2>> RiceError.log; then
-        echo -e "${green}[+] ${gray}Fuentes instalada.${end}"
-        sleep 1
-    else
-        echo -e "${red}[!] ${gray}La instalacion de las fuentes ha fallado, puedes verlo en RiceError.log${end}"
-        sleep 1
-    fi
+    echo -e "${red}[!] ${gray}La instalacion de las fuentes ha fallado, puedes verlo en RiceError.log${end}"
+    sleep 1
 fi
 
 cp -f $repo_dir/home/.zshrc "$HOME"
