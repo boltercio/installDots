@@ -118,7 +118,7 @@ logo
 echo -e "${gray}Descargando dotfiles.${end}"
 
 repo_url="https://github.com/boltercio/installDots"
-repo_dir="$HOME/installDots"
+repo_dir="$HOME/dots"
 
 # Verifica si el directorio del repositorio ya existe y, si es así, lo elimina
 if [ -d "$repo_dir" ]; then
@@ -201,6 +201,21 @@ sleep 5
 ########## ---------- Copy the Rice! ---------- ##########
 
 logo 
+
+echo -e "${gray}Podemos intastalar todas las fuentes del repositorio 'NERD-FONTS' para
+que puedas ver correctamente todos los iconos en la terminal y los paneles, pero es una instalacion
+pesada, requiere unos 20Gb de espacio y tardara bastante tiempo dependiendo de tu equipo y conexion.
+Si respondes 'n' se instalaran las fuentes esctictamente necesarias.${end}"
+
+while true; do
+    read -rp "Quieres probar la configuracion de neovim de gh0stzk? (y/n): " nerd_fonts
+    if [[ "$nerd_fonts" == "y" || "$nerd_fonts" == "n" ]]; then
+        break
+    else
+        echo "Respuesta invalida. selecciona 'y' o 'n'."
+    fi
+done
+
 echo -e "${gray}Instalando dotfiles..${end}"
 echo -e "${green}[+] ${gray}Copiando archivos a sus respectivos directorios${end}"
 
@@ -223,12 +238,23 @@ for dirs in $repo_dir/config/*; do
     fi
 done
 
-if cp -R $repo_dir/local/share/fonts ~/.local/share/ 2>> RiceError.log; then
-    echo -e "${green}[+] ${gray}Fuentes copiadas correctamente${end}"
-    sleep 1
+if [[ $nerd_fonts == "y" ]]; then
+    echo -e "${gray}Instalando fuentes Nerd Fonts${end}"
+
+    git clone https://github.com/ryanoasis/nerd-fonts.git
+    cd nerd-fonts
+    ./install.sh >/dev/null
+    cd .. && rm -rf nerd-fonts
+    echo -e "Fuentes instaladas"
+    sleep 5
 else
-    echo -e "${red}[!] ${gray}Fallo al copiar las fuentes, puedes verlo en RiceError.log${end}"
-    sleep 1
+    if cp -R local/share/fonts ~/.local/share/ 2>> RiceError.log; then
+        echo -e "${green}[+] ${gray}Fuentes instalada.${end}"
+        sleep 1
+    else
+        echo -e "${red}[!] ${gray}La instalacion de las fuentes ha fallado, puedes verlo en RiceError.log${end}"
+        sleep 1
+    fi
 fi
 
 cp -f $repo_dir/home/.zshrc "$HOME"
@@ -236,7 +262,6 @@ fc-cache -rv >/dev/null 2>&1
 
 echo -e "Copia de archivos terminada!!"
 sleep 5
-
 
 ########## ---------- Instalando plugins para zsh ---------- ##########
 logo 
@@ -260,6 +285,8 @@ wget https://raw.githubusercontent.com/zsh-users/zsh-history-substring-search/ma
 sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
 sudo mv zsh-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
 sudo mv zsh* /usr/share/zsh/plugins/
+
+rm -R zsh-autosuggeestions zsh-syntax-highlighting
 sleep 5
 
 ########## ---------- Instalando EWW ---------- ##########
@@ -281,7 +308,7 @@ else
 		sudo install -m 755 "$HOME/eww/target/release/eww" -t /usr/bin/
 	} && {
 		cd "$HOME" || exit
-	    rm -rf {.cargo,.rustup,eww}
+	    rm -rf .cargo .rustup eww
     } || {
         echo -e "${red}[!] ${gray}Fallo al installar Eww. tendras que instalarlo manualmente.\n${end}"
         sleep 0.5
@@ -302,5 +329,7 @@ if [[ $SHELL != "/usr/bin/zsh" ]]; then
 else
 	echo -e "${green}[+] ${gray}Zsh ya es tu shell por defecto.${end}"
 fi
+rm -rf $repo_dir
 sleep 2
-zsh
+
+echo -e "${gray}Script terminado puedes cerrar sesion para iniciar con bspwm${end}"
