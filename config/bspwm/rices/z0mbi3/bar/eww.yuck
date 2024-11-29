@@ -32,7 +32,7 @@
 		(button :class "launcher_icon"
 		   	    :onclick "cd ; OpenApps --menu &"
 		   	    :onrightclick "OpenApps --rice &"
-		   	    "󰣇"
+		   	    ""
       )
     )
   )

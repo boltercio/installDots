@@ -81,7 +81,7 @@ dependencias=(build-essential libgtk-3-dev libdbusmenu-glib-dev libdbusmenu-gtk3
 			  webp-pixbuf-loader xorg physlock papirus-icon-theme \
 			  fonts-jetbrains-mono fonts-inconsolata lightdm  \
 			  x11-utils x11-xserver-utils stalonetray \
-			  alacritty kitty lsd wget bat neovim npm \
+			  alacritty kitty lsd bat neovim npm \
           )
 
 is_installed() {
@@ -91,7 +91,7 @@ is_installed() {
 
 for paquete in "${dependencias[@]}"; do
     if ! is_installed "$paquete"; then
-        sudo apt-get install -qq -y "$paquete" 1>/dev/null 2>>RiceError.log
+        sudo apt-get install -qq -y "$paquete"
         if [ "$(echo $?)" != 0 ]; then
             echo -e "${red}[!] ${gray}Ha fallado la instalacion de $paquete${end}"
         else
@@ -262,7 +262,6 @@ sudo mv sudo.plugin.zsh /usr/share/zsh/plugins/zsh-sudo/
 sudo mv zsh-history-substring-search.zsh /usr/share/zsh/plugins/zsh-history-substring-search/
 sudo mv zsh* /usr/share/zsh/plugins/
 
-rm -R zsh-autosuggeestions zsh-syntax-highlighting
 sleep 5
 
 ########## ---------- Instalando EWW ---------- ##########

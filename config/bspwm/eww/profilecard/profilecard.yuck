@@ -122,10 +122,11 @@
 	           :spacing 7
 	           (box :orientation "v"
 					:class "pacman"
+                    :width 140
 					:hexpand true
 					(label :halign "start"
 						   :class "pacman-icon"
-						   :text "󰮯")
+						   :text "󰚰")
 					(box :space-evenly "false"
 						 (eventbox :cursor "pointer"
 						 (button :class "pacman-updates"
@@ -134,11 +135,12 @@
 								 :onclick "OpenApps --update &" "${updates} Updates"))))
 			   (box :orientation "h"
 					:space-evenly "false"
+                    :width 170
 					:class "fetch"
-					:spacing 8
+					:spacing 25
 					(label :class "arch-icon"
 						   :halign "start"
-						   :text "󰣇")
+						   :text "")
 					(box 
 						 :space-evenly "false"
 						 (box :orientation "v"
@@ -147,10 +149,10 @@
 							  :style "margin-left: 10px;"
 							  (label :class "os-icon" 
 									 :halign "start"
-									 :text "󰣇")
+									 :text "")
 							  (label :class "pkgs-icon"
 									 :halign "start"
-									 :text "󰮯")
+									 :text "󰚰")
 							  (label :class "wm-icon"
 									 :halign "start"
 									 :text "󱪳")))
